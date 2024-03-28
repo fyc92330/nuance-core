@@ -8,4 +8,6 @@ import org.chun.handler.ElkLogger;
 public class LogUtil {
 
   public static final Logger SYSTEM = new ElkLogger(LogManager.getLogger("system"));
+
+  public static final Logger CACHE = new ElkLogger(LogManager.getLogger("cache"));
 }

@@ -3,4 +3,5 @@ rootProject.name = 'nuance'
 include 'base'
 include 'jackson'
 include 'logger'
+include 'cache'
 
