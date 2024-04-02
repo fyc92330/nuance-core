@@ -4,4 +4,5 @@ include 'base'
 include 'jackson'
 include 'logger'
 include 'cache'
+include 'message'
 

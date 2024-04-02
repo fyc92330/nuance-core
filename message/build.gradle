@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(':base')
+    implementation project(':jackson')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: "${springBootVersion}"
+}
