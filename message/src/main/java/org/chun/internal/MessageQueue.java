@@ -1,5 +1,7 @@
 package org.chun.internal;
 
-public interface MessageQueue {
+import java.util.Queue;
+
+public interface MessageQueue<T extends Message> extends Queue<Message> {
 
 }

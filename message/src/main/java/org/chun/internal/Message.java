@@ -1,5 +1,8 @@
 package org.chun.internal;
 
-public interface Message {
+import java.util.Map;
 
+public interface Message extends Map<String, Object> {
+
+  String getId();
 }

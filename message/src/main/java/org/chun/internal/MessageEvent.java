@@ -1,5 +1,6 @@
 package org.chun.internal;
 
-public interface MessageEvent {
+public interface MessageEvent<T extends Message> {
 
+  T get();
 }
