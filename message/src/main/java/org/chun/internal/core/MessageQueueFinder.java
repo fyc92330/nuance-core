@@ -1,9 +1,9 @@
 package org.chun.internal.core;
 
-public interface MessageQueueFinder {
+public interface MessageQueueFinder<T extends Message> {
 
-  MessageQueue<Message> getQueue();
+  MessageQueue<T> getQueue();
 
-  Class<MessageQueue<Message>> getQueueClass();
+  Class<MessageQueue<T>> getQueueClass();
 
 }

@@ -1,10 +1,10 @@
 package org.chun.internal.core;
 
-public interface MessageListener<T extends MessageEvent<Message>> {
+public interface MessageListener<T extends Message, E extends MessageEvent<T>> {
 
-  Message convert(T event);
+  T convert(E event);
 
-  void produce(Message message);
+  void produce(T message);
 
   void call(String queueId); // call 對應的 fetcher
 }

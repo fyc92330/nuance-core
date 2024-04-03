@@ -10,21 +10,21 @@ import org.chun.internal.core.MessageListener;
 import org.chun.internal.core.MessageQueue;
 import org.chun.internal.core.MessageQueueFinder;
 
-public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Message>> implements MessageListener<T>, MessageListenExecutor<T>, MessageQueueFinder {
+public abstract class AbstractSimpleMessageListener<T extends Message, E extends MessageEvent<T>> implements MessageListener<T, E>, MessageListenExecutor<T, E>, MessageQueueFinder<T> {
 
-  public abstract MessageQueue<Message> getQueue();
+  public abstract MessageQueue<T> getQueue();
 
-  public abstract Class<MessageQueue<Message>> getQueueClass();
+  public abstract Class<MessageQueue<T>> getQueueClass();
 
-  public abstract MessageFetcher<?> fetcher();
+  public abstract MessageFetcher<T> fetcher();
 
 
   @Override
-  public void execute(List<T> events) {
+  public void execute(List<E> events) {
 
-    for (T event : events) {
+    for (E event : events) {
 
-      Message message = convert(event);
+      T message = convert(event);
       produce(message);
       call(getQueue().id());
     }
@@ -32,14 +32,14 @@ public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Messa
 
 
   @Override
-  public Message convert(T event) {
+  public T convert(E event) {
 
     return event.get();
   }
 
 
   @Override
-  public void produce(@NonNull Message message) {
+  public void produce(@NonNull T message) {
 
     getQueue().add(message);
   }

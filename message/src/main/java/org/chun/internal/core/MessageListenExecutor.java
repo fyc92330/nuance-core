@@ -2,9 +2,9 @@ package org.chun.internal.core;
 
 import java.util.List;
 
-public interface MessageListenExecutor<T extends MessageEvent<Message>> {
+public interface MessageListenExecutor<T extends Message, E extends MessageEvent<T>> {
 
-  void execute(List<T> events);
+  void execute(List<E> events);
 
-  MessageFetcher<?> fetcher();
+  MessageFetcher<T> fetcher();
 }

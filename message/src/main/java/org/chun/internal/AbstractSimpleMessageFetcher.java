@@ -13,15 +13,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class AbstractSimpleMessageFetcher<T extends Message> implements MessageFetcher<T>, MessageFetchExecutor<T>, MessageQueueFinder {
+public abstract class AbstractSimpleMessageFetcher<T extends Message> implements MessageFetcher<T>, MessageFetchExecutor<T>, MessageQueueFinder<T> {
 
   @Autowired
   private ApplicationContext applicationContext;
 
 
-  public abstract MessageQueue<Message> getQueue();
+  public abstract MessageQueue<T> getQueue();
 
-  public abstract Class<MessageQueue<Message>> getQueueClass();
+  public abstract Class<MessageQueue<T>> getQueueClass();
 
   public abstract void execute(List<T> messages);
 
@@ -36,7 +36,7 @@ public abstract class AbstractSimpleMessageFetcher<T extends Message> implements
   @Override
   public void consume(String queueId) {
 
-    MessageQueue<T> queue = (MessageQueue<T>) applicationContext.getBean(getQueueClass());
+    MessageQueue<T> queue = applicationContext.getBean(getQueueClass());
     if (!queueId.equals(queue.id())) {
       throw new GDInternalException(GDApiStatusType.KNOWN_ERROR);
     }
