@@ -1,4 +1,4 @@
-package org.chun.internal;
+package org.chun.internal.core;
 
 public interface MessageExchange<T extends Message, R extends MessageQueue<T>> {
 

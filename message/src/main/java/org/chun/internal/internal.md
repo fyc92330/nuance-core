@@ -40,4 +40,8 @@
 5. 控管的 `GlobalMessageManager` 應該要是 Simple
 6. `MessageExchangeType` 無論為何都會有一組預設啟用的 `Bean`, 按照流量決定彈性加減 `Queue` 和 `Fetcher`
 
-
+## Queue 實作
+- LinkedList: 基本的刪除和插入都為 O(1) 
+- LinkedBlockingQueue: Thread safe 的結構, 佇列空或滿的時候會阻塞 
+- ArrayBlockingQueue: Thread safe 的數組結構, 固定大小
+BlockingQueue 的 add() 和 put() 會有阻塞的區別, add() 在佇列滿時會直接拋出 `IllegalStateException` 而 put() 會阻塞著執行緒, put() 有多型方式可以實現超時。
