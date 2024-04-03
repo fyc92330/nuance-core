@@ -1,20 +1,27 @@
 package org.chun.internal;
 
 import java.util.List;
+import org.chun.enums.GDApiStatusType;
+import org.chun.exception.GDInternalException;
 import org.chun.internal.core.Message;
 import org.chun.internal.core.MessageFetchExecutor;
 import org.chun.internal.core.MessageFetcher;
 import org.chun.internal.core.MessageQueue;
+import org.chun.internal.core.MessageQueueFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class AbstractSimpleMessageFetcher<T extends Message> implements MessageFetcher<T>, MessageFetchExecutor<T> {
+public abstract class AbstractSimpleMessageFetcher<T extends Message> implements MessageFetcher<T>, MessageFetchExecutor<T>, MessageQueueFinder {
 
   @Autowired
   private ApplicationContext applicationContext;
 
+
+  public abstract MessageQueue<Message> getQueue();
+
+  public abstract Class<MessageQueue<Message>> getQueueClass();
 
   public abstract void execute(List<T> messages);
 
@@ -29,11 +36,12 @@ public abstract class AbstractSimpleMessageFetcher<T extends Message> implements
   @Override
   public void consume(String queueId) {
 
-    for (MessageQueue<?> queue : applicationContext.getBeansOfType(MessageQueue.class).values()) {
-      if (queueId.equals(queue.id())) {
-        List<T> messages = fetch((MessageQueue<T>) queue);
-        execute(messages);
-      }
+    MessageQueue<T> queue = (MessageQueue<T>) applicationContext.getBean(getQueueClass());
+    if (!queueId.equals(queue.id())) {
+      throw new GDInternalException(GDApiStatusType.KNOWN_ERROR);
     }
+
+    List<T> messages = fetch(queue);
+    execute(messages);
   }
 }

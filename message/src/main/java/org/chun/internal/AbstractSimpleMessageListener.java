@@ -7,15 +7,14 @@ import org.chun.internal.core.MessageEvent;
 import org.chun.internal.core.MessageFetcher;
 import org.chun.internal.core.MessageListenExecutor;
 import org.chun.internal.core.MessageListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.chun.internal.core.MessageQueue;
+import org.chun.internal.core.MessageQueueFinder;
 
-@Component
-public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Message>> implements MessageListener<T>, MessageListenExecutor<T> {
+public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Message>> implements MessageListener<T>, MessageListenExecutor<T>, MessageQueueFinder {
 
-  @Autowired
-  private SimpleMessageQueue<Message> queue;
+  public abstract MessageQueue<Message> getQueue();
 
+  public abstract Class<MessageQueue<Message>> getQueueClass();
 
   public abstract MessageFetcher<?> fetcher();
 
@@ -27,7 +26,7 @@ public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Messa
 
       Message message = convert(event);
       produce(message);
-      call(queue.id());
+      call(getQueue().id());
     }
   }
 
@@ -42,7 +41,7 @@ public abstract class AbstractSimpleMessageListener<T extends MessageEvent<Messa
   @Override
   public void produce(@NonNull Message message) {
 
-    queue.add(message);
+    getQueue().add(message);
   }
 
 
