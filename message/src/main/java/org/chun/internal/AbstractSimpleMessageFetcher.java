@@ -21,7 +21,7 @@ public abstract class AbstractSimpleMessageFetcher<T extends Message> implements
 
   public abstract MessageQueue<T> getQueue();
 
-  public abstract Class<MessageQueue<T>> getQueueClass();
+  public abstract Class<? extends MessageQueue<T>> getQueueClass();
 
   public abstract void execute(List<T> messages);
 

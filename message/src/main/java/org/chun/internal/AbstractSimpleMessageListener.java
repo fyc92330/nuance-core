@@ -14,7 +14,7 @@ public abstract class AbstractSimpleMessageListener<T extends Message, E extends
 
   public abstract MessageQueue<T> getQueue();
 
-  public abstract Class<MessageQueue<T>> getQueueClass();
+  public abstract Class<? extends MessageQueue<T>> getQueueClass();
 
   public abstract MessageFetcher<T> fetcher();
 

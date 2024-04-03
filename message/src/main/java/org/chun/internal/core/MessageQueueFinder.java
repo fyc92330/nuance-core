@@ -4,6 +4,6 @@ public interface MessageQueueFinder<T extends Message> {
 
   MessageQueue<T> getQueue();
 
-  Class<MessageQueue<T>> getQueueClass();
+  Class<? extends MessageQueue<T>> getQueueClass();
 
 }
