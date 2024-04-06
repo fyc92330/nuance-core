@@ -7,19 +7,11 @@ import org.chun.internal.core.MessageFetcher;
 import org.chun.internal.core.MessageListenExecutor;
 import org.chun.internal.core.MessageListener;
 import org.chun.internal.core.MessageQueue;
-import org.chun.internal.core.MessageQueueFinder;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-public abstract class AbstractSimpleMessageListener<T extends Message, E extends MessageEvent<T>> implements MessageListener<T, E>, MessageListenExecutor<T, E>, MessageQueueFinder<T> {
+public abstract class AbstractSimpleMessageListener<T extends Message, E extends MessageEvent<T>> extends AbstractQueueFinder<T> implements MessageListener<T, E>, MessageListenExecutor<T, E> {
 
-	public abstract Map<String, MessageQueue<T>> getQueueMap();
-
-	public abstract MessageQueue<T>[] getQueues();
-
-	public abstract Class<? extends MessageQueue<T>>[] getQueueClasses();
 
 	public abstract MessageFetcher<T> fetcher();
 
@@ -31,7 +23,7 @@ public abstract class AbstractSimpleMessageListener<T extends Message, E extends
 
 			T message = convert(event);
 			produce(message, key);
-			Arrays.stream(getQueues()).map(MessageQueue::id).forEach(this::call);
+			getQueues().stream().map(MessageQueue::id).forEach(this::call);
 		}
 	}
 

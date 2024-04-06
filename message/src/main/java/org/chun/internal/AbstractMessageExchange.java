@@ -20,12 +20,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
-public abstract class AbstractMessageExchange<T extends Message, E extends MessageEvent<T>, F extends MessageQueueFinder<T>> implements MessageExchange<T, E, F> {
+public abstract class AbstractMessageExchange<T extends Message, E extends MessageEvent<T>, F extends MessageQueueFinder<T>> extends AbstractQueueFinder<T> implements MessageExchange<T, E, F> {
 
 	protected final List<F> subFinders = new ArrayList<>();
 
 	@PostConstruct
-	protected abstract void init();// 將subFinders 填滿
+	public abstract void init();// 將subFinders 填滿
 
 	@Override
 	public List<F> finders() {
@@ -40,7 +40,7 @@ public abstract class AbstractMessageExchange<T extends Message, E extends Messa
 
 		for (F queueFinder : subFinders) {
 
-			MessageQueue<T>[] queues = queueFinder.getQueues();
+			List<MessageQueue<T>> queues = queueFinder.getQueues();
 			boolean isValid = switch (messageExchangeType) {
 				case DIRECT -> validDirectQueue(queues, keys);
 				case TOPIC -> validTopicQueue(queues, keys);
@@ -63,13 +63,13 @@ public abstract class AbstractMessageExchange<T extends Message, E extends Messa
 		}
 	}
 
-	private boolean validDirectQueue(MessageQueue<T>[] queues, String[] keys) {
+	private boolean validDirectQueue(List<MessageQueue<T>> queues, String[] keys) {
 
-		Set<String> ids = Arrays.stream(queues).map(MessageQueue::id).collect(Collectors.toSet());
+		Set<String> ids = queues.stream().map(MessageQueue::id).collect(Collectors.toSet());
 		return Arrays.stream(keys).anyMatch(ids::contains);
 	}
 
-	private boolean validTopicQueue(MessageQueue<T>[] queues, String[] keys) {
+	private boolean validTopicQueue(List<MessageQueue<T>> queues, String[] keys) {
 
 		boolean isMatch = false;
 		for (MessageQueue<T> queue : queues) {
